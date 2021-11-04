@@ -7,6 +7,7 @@
 @Contact :   wshglearn@163.com
 @Desc    :   通过mask构建labelme的json
 '''
+import re
 import cv2
 import json
 import numpy as np
@@ -27,11 +28,11 @@ class JsonEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 class BuildJson(object):
-    def __init__(self,template_json_path='labelme4.5.7_template.json',point_precision=0.001) -> None:
-        if not ops.exists(template_json_path):
-            print('can not found file in '+template_json_path)
-        self.labelme_template = json.load(open(template_json_path, 'r', encoding='utf-8'))
-        self.labelme_template['shapes'] = []
+    def __init__(self,labelme_template,point_precision=None) -> None:
+        self.labelme_template = labelme_template
+        if len(labelme_template['shapes'])==1 and len(labelme_template['shapes'][0]['points'])==0:
+            self.labelme_template['shapes']=[]
+
         self.point_precision=point_precision
     
     def get_mask_shapes(self,mask,label='unnamed'):
@@ -48,15 +49,17 @@ class BuildJson(object):
         '''
         mask_shapes = []
         mask = mask.astype(np.uint8)
-        cv2.imwrite('test.png',mask)
         mask = mask[..., -1] if len(mask.shape) == 3 else mask
-        # cv2.imwrite('test.png',mask)
         contours, _ = cv2.findContours(
             mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # 原始mask
         
         for contour in contours:
+            # 设置多边形拟合精度
+            min_epsilon= 0.001 * cv2.arcLength(contour, True); #值越大，点越少，结果越粗糙
+            if self.point_precision!=None:
+                min_epsilon=self.point_precision
+            
             # 使用opencv求得近似多边形的点集合
-            min_epsilon= self.point_precision * cv2.arcLength(contour, True); #值越大，点越少，结果越粗糙
             new_contour = cv2.approxPolyDP(contour, min_epsilon, True)  
             new_contour = np.reshape(new_contour, (new_contour.shape[0], new_contour.shape[2]))
 
@@ -104,4 +107,6 @@ class BuildJson(object):
         json_content = json.dumps(self.labelme_template,cls=JsonEncoder, ensure_ascii=False, indent=2, separators=(',', ': '))
         with open(save_json_path, 'w+', encoding='utf-8') as fw:
             fw.write(json_content)
+        
+        return 1
 
