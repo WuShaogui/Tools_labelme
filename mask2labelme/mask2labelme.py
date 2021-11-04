@@ -80,7 +80,7 @@ def main(parsed):
         os.makedirs(parsed.json_dir,exist_ok=True)
     
     # 获取mask路径下的mask文件路径(默认以png结尾)
-    images_path=[osp.join(parsed.image_dir,image_name) for image_name in glob.glob(osp.join(parsed.image_dir,'*[.png,.jpg,.jpeg,.bmp]'))]
+    images_path=[osp.join(parsed.image_dir,image_name) for image_name in glob.glob(osp.join(parsed.image_dir,'*[png,jpg,jpeg,bmp]'))]
     if len(images_path)==0:
         LOG.error('image not found in directory:{}'.format(parsed.image_dir))
         return
@@ -121,7 +121,7 @@ def main(parsed):
 
 if __name__ == '__main__':
     args=argparse.ArgumentParser('convert mask to json')
-    args.add_argument('-d','--image_dir',default='',type=str,help='images directory')
+    args.add_argument('-i','--image_dir',default='',type=str,help='images directory')
     args.add_argument('-m','--mask_dir',default='',type=str,help='mask directory')
     args.add_argument('-s','--json_dir',default='convert_masks',type=str,help='save mask directory')
     args.add_argument('-j','--template_json_path',default='mask2labelme/labelme4.5.7_template.json',type=str,help='template json path')
