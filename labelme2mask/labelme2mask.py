@@ -113,7 +113,7 @@ def export_jsons_to_masks(jsons_path,labels_name,mask_dir,convert_mode=0,issave_
 # 主函数
 def main(parsed):
     # 检查数据路径及json路径
-    assert osp.exists(parsed.data_dir),LOG.error('data directory not found:{}'.format(parsed.data_dir))
+    # assert osp.exists(parsed.data_dir),LOG.error('data directory not found:{}'.format(parsed.data_dir))
     assert osp.exists(parsed.json_dir),LOG.error('json directory not found:{}'.format(parsed.json_dir))
     
     # 检查保存路径
@@ -161,21 +161,21 @@ def main(parsed):
 if __name__ == '__main__':
     # 初始化参数
     args=argparse.ArgumentParser("convert json to mask")
-    args.add_argument('-d','--data_dir',default='',type=str,help='数据路径')
+    # args.add_argument('-d','--data_dir',default='',type=str,help='数据路径')
     args.add_argument('-j','--json_dir',default='',type=str,help='json路径')
-    args.add_argument('-s','--mask_dir',default='',type=str,help='mask保存路径')
+    args.add_argument('-m','--mask_dir',default='',type=str,help='mask保存路径')
     args.add_argument('-l','--labels_name',default=['dog','cat'],type=list,help='待解析的标签')
 
     # 针对有重叠的目标提供2种转换模式
     # 0:重叠区域只属于一类
     # 1:重叠区域可属于多类
-    args.add_argument('-m','--convert_mode',default=0,type=int,help='转换模式，0:重叠区域只属于一类；1:重叠区域可属于多类')
+    args.add_argument('-c','--convert_mode',default=0,type=int,help='转换模式，0:重叠区域只属于一类；1:重叠区域可属于多类')
     args.add_argument('-t','--thread_num',default=1,type=int,help='多线程数量')
     args.add_argument('-e','--issave_empty_mask',default=False,type=bool,help='is save empty mask?')
     parsed=args.parse_args()
 
     # 手动定义参数
-    parsed.data_dir='/home/wushaogui/MyCodes/LabelmeConvert/test/images'
+    # parsed.data_dir='/home/wushaogui/MyCodes/LabelmeConvert/test/images'
     parsed.json_dir='/home/wushaogui/MyCodes/LabelmeConvert/test/labelme_jsons'
     parsed.mask_dir='/home/wushaogui/MyCodes/LabelmeConvert/test/masks'
 
