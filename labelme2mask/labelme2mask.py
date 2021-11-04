@@ -65,6 +65,7 @@ def export_json_to_mask(json_path,labels_name,mask_dir,convert_mode=0,issave_emp
                 label_mask_path=osp.join(label_mask_dir,osp.basename(json_path).replace('.json', '.png'))
                 cv2.imwrite(label_mask_path,label_mask)
                 LOG.warning('{}:save empty mask {} for label {}'.format(print_info,osp.basename(json_path),labels_name))
+        LOG.warning('not found labels:{} in json:{}'.format(labels_name,json_path))
     else:
         # 获取标签字典对应的mask
         if convert_mode==1:
@@ -122,6 +123,7 @@ def main(parsed):
 
     # 获取json路径下的json文件路径
     jsons_path=[osp.join(parsed.json_dir,json_name) for json_name in glob.glob(osp.join(parsed.json_dir,'*.json'))]
+    LOG.info('found {} json'.format(len(jsons_path)))
     if len(jsons_path)==0:
         LOG.error('json not found in directory:{}'.format(parsed.json_dir))
         return
@@ -164,7 +166,7 @@ if __name__ == '__main__':
     # args.add_argument('-d','--data_dir',default='',type=str,help='数据路径')
     args.add_argument('-j','--json_dir',default='',type=str,help='json路径')
     args.add_argument('-m','--mask_dir',default='',type=str,help='mask保存路径')
-    args.add_argument('-l','--labels_name',default=['dog','cat'],type=list,help='待解析的标签')
+    args.add_argument('-l','--labels_name',default=['cat'],type=list,help='待解析的标签')
 
     # 针对有重叠的目标提供2种转换模式
     # 0:重叠区域只属于一类
@@ -175,9 +177,9 @@ if __name__ == '__main__':
     parsed=args.parse_args()
 
     # 手动定义参数
-    # parsed.data_dir='/home/wushaogui/MyCodes/LabelmeConvert/test/images'
-    parsed.json_dir='/home/wushaogui/MyCodes/LabelmeConvert/test/labelme_jsons'
-    parsed.mask_dir='/home/wushaogui/MyCodes/LabelmeConvert/test/masks'
+    # parsed.data_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/'
+    parsed.json_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/'
+    parsed.mask_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/masks'
 
     # parsed.convert_mode=1
     # parsed.thread_num=3
