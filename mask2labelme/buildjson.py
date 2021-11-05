@@ -11,7 +11,7 @@ import re
 import cv2
 import json
 import numpy as np
-import os.path as ops
+import os.path as osp
 from base64 import b64encode
 
 class JsonEncoder(json.JSONEncoder):
@@ -94,12 +94,13 @@ class BuildJson(object):
             self.labelme_template['shapes'].extend(self.get_mask_shapes(labels_mask[ind],label=str(label_name)))
 
         # 修改json信息
+        assert osp.exists(image_path),'image not exist:{}'.format(image_path)
         # image=cv2.imread(image_path)
         image=cv2.imdecode(np.fromfile(image_path, dtype=np.uint8), cv2.IMREAD_COLOR)
         self.labelme_template['imageHeight'] = image.shape[0]
         self.labelme_template['imageWidth'] = image.shape[1]
 
-        rel_image_path = ops.join(ops.relpath(ops.dirname(image_path),ops.dirname(save_json_path)),ops.basename(image_path))
+        rel_image_path = osp.join(osp.relpath(osp.dirname(image_path),osp.dirname(save_json_path)),osp.basename(image_path))
         self.labelme_template['imagePath'] = rel_image_path
         self.labelme_template['imageData'] = b64encode(open(image_path, "rb").read()).decode('utf-8')
 
