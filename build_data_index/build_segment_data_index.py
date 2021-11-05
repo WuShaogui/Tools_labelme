@@ -62,16 +62,17 @@ def main(parsed):
         random.shuffle(samples)
     
     # 写入数据
-    # !! 追加模式下，确保数据来源不一致，不然数据可能同时出现在训练集及验证集
+    train_index_path=osp.join(parsed.save_dir,'train_index.txt')
+    test_index_path=osp.join(parsed.save_dir,'test_index.txt')
     if parsed.isappend:
         # 追加模式添加
-        with open(osp.join(parsed.save_dir,'train_index.txt'),'a') as fw:
+        with open(train_index_path,'a') as fw:
             for availabel_image_path,availabel_mask_path in samples[:len(availabel_images_path)-test_num]:
                 sample_record='{} {}\n'.format(availabel_image_path,availabel_mask_path)
                 fw.write(sample_record)
 
         # 追加模式添加
-        with open(osp.join(parsed.save_dir,'test_index.txt'),'a') as fw:
+        with open(test_index_path,'a') as fw:
             for availabel_image_path,availabel_mask_path in samples[len(availabel_images_path)-test_num:]:
                 sample_record='{} {}\n'.format(availabel_image_path,availabel_mask_path)
                 fw.write(sample_record)
@@ -79,13 +80,13 @@ def main(parsed):
         LOG.success('total images:{}\tappend mode,train sample:{}\ttest sample:{}'.format(len(images_path),len(availabel_images_path)-test_num,test_num))
     else:
         # 覆盖模式添加
-        with open(osp.join(parsed.save_dir,'train_index.txt'),'w') as fw:
+        with open(train_index_path,'w') as fw:
             for availabel_image_path,availabel_mask_path in samples[:len(availabel_images_path)-test_num]:
                 sample_record='{} {}\n'.format(availabel_image_path,availabel_mask_path)
                 fw.write(sample_record)
 
         # 覆盖模式添加
-        with open(osp.join(parsed.save_dir,'test_index.txt'),'w') as fw:
+        with open(test_index_path,'w') as fw:
             for availabel_image_path,availabel_mask_path in samples[len(availabel_images_path)-test_num:]:
                 sample_record='{} {}\n'.format(availabel_image_path,availabel_mask_path)
                 fw.write(sample_record)
@@ -112,6 +113,6 @@ if __name__ == '__main__':
 
     parsed.test_split= 0.1
     # parsed.isshuffle= False
-    # parsed.isappend= True
+    parsed.isappend= True
 
     main(parsed)
