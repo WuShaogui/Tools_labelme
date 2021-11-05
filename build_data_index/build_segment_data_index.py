@@ -20,7 +20,7 @@ LOG=loguru.logger
 
 def main(parsed):
     # 检查数据路径及json路径
-    assert osp.exists(parsed.data_dir),LOG.error('data directory not found:{}'.format(parsed.data_dir))
+    assert osp.exists(parsed.images_dir),LOG.error('data directory not found:{}'.format(parsed.images_dir))
     assert osp.exists(parsed.mask_dir),LOG.error('json directory not found:{}'.format(parsed.mask_dir))
 
     # 检查保存路径
@@ -31,11 +31,11 @@ def main(parsed):
     extension = ['*.png', '*.bmp', '*.jpg', '*.jpeg']
     images_name = []
     for ext in extension:
-        images_name+=glob.glob(osp.join(parsed.data_dir,ext))
+        images_name+=glob.glob(osp.join(parsed.images_dir,ext))
     
-    images_path=[osp.join(parsed.data_dir,image_name) for image_name in sorted(images_name)]
+    images_path=[osp.join(parsed.images_dir,image_name) for image_name in sorted(images_name)]
     if len(images_path)==0:
-        LOG.error('json not found in directory:{}'.format(parsed.data_dir))
+        LOG.error('json not found in directory:{}'.format(parsed.images_dir))
         return
     
     #根据数据文件及mask文件夹获取可用的数据及标签
@@ -98,7 +98,7 @@ def main(parsed):
 if __name__ == '__main__':
     # 初始化参数
     args=argparse.ArgumentParser("convert json to mask")
-    args.add_argument('-d','--data_dir',default='',type=str,help='数据路径')
+    args.add_argument('-d','--images_dir',default='',type=str,help='数据路径')
     args.add_argument('-m','--mask_dir',default='',type=str,help='mask保存路径')
     args.add_argument('-s','--save_dir',default='./',type=str,help='生成文件的保存路径')
 
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     parsed=args.parse_args()
 
     # 自定义参数
-    parsed.data_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/'
+    parsed.images_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/'
     parsed.mask_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/masks/1'
     parsed.save_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/dataset'
 
