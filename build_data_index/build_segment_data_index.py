@@ -8,12 +8,13 @@
 @Desc    :   构建分割任务的训练、测试样本的标记
 '''
 
+import argparse
 import glob
 import os
 import os.path as osp
-import loguru
-import argparse
 import random
+
+import loguru
 
 LOG=loguru.logger
 
@@ -111,8 +112,8 @@ if __name__ == '__main__':
     parsed.mask_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/masks/1'
     parsed.save_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/dataset'
 
-    parsed.test_split= 0.1
+    # parsed.test_split= 0.1
     # parsed.isshuffle= False
-    parsed.isappend= True
+    # parsed.isappend= True
 
     main(parsed)
