@@ -25,7 +25,7 @@ class BuildSegementDataset(object):
         self.isshuffle=isshuffle
         self.isappend=isappend
     
-    def run(self,images_dir,masks_dir,save_dir):
+    def run(self,images_dir,masks_dir,save_dir,separator_char='|'):
         # 检查数据路径及json路径
         assert osp.exists(images_dir),LOG.error('data directory not found:{}'.format(images_dir))
         assert osp.exists(masks_dir),LOG.error('json directory not found:{}'.format(masks_dir))
@@ -76,13 +76,13 @@ class BuildSegementDataset(object):
             # 追加模式添加
             with open(train_index_path,'a') as fw:
                 for availabel_image_path,availabel_mask_path in samples[:len(availabel_images_path)-test_num]:
-                    sample_record='{} {}\n'.format(availabel_image_path,availabel_mask_path)
+                    sample_record='{}{}{}\n'.format(availabel_image_path,separator_char,availabel_mask_path)
                     fw.write(sample_record)
 
             # 追加模式添加
             with open(test_index_path,'a') as fw:
                 for availabel_image_path,availabel_mask_path in samples[len(availabel_images_path)-test_num:]:
-                    sample_record='{} {}\n'.format(availabel_image_path,availabel_mask_path)
+                    sample_record='{}{}{}\n'.format(availabel_image_path,separator_char,availabel_mask_path)
                     fw.write(sample_record)
             
             LOG.success('total images:{}\tappend mode,train sample:{}\ttest sample:{}'.format(len(images_path),len(availabel_images_path)-test_num,test_num))
@@ -90,13 +90,13 @@ class BuildSegementDataset(object):
             # 覆盖模式添加
             with open(train_index_path,'w') as fw:
                 for availabel_image_path,availabel_mask_path in samples[:len(availabel_images_path)-test_num]:
-                    sample_record='{} {}\n'.format(availabel_image_path,availabel_mask_path)
+                    sample_record='{}{}{}\n'.format(availabel_image_path,separator_char,availabel_mask_path)
                     fw.write(sample_record)
 
             # 覆盖模式添加
             with open(test_index_path,'w') as fw:
                 for availabel_image_path,availabel_mask_path in samples[len(availabel_images_path)-test_num:]:
-                    sample_record='{} {}\n'.format(availabel_image_path,availabel_mask_path)
+                    sample_record='{}{}{}\n'.format(availabel_image_path,separator_char,availabel_mask_path)
                     fw.write(sample_record)
             
             LOG.success('total images:{}\treplace mode,train sample:{}\ttest sample:{}'.format(len(images_path),len(availabel_images_path)-test_num,test_num))
@@ -112,6 +112,7 @@ if __name__ == '__main__':
     args.add_argument('-p','--test_split',default=0.1,type=float,help='数据划分的比例，可固定值可比例值设置')
     args.add_argument('-f','--isshuffle',default=True,type=bool,help='是否打乱数据')
     args.add_argument('-a','--isappend',default=False,type=bool,help='是否在标记文件上执行追加操作')
+    args.add_argument('-c','--separator_char',default='|',type=str,help='数据和标签之间的分隔符')
     parsed=args.parse_args()
 
     # 自定义参数
@@ -122,7 +123,8 @@ if __name__ == '__main__':
     # parsed.test_split= 0.1
     # parsed.isshuffle= False
     # parsed.isappend= True
+    parsed.separator_char=' | '
 
     # 初始化处理类并运行
     buil_segment_dataset=BuildSegementDataset(parsed.test_split,parsed.isshuffle,parsed.isappend)
-    buil_segment_dataset.run(parsed.images_dir,parsed.masks_dir,parsed.save_dir)
+    buil_segment_dataset.run(parsed.images_dir,parsed.masks_dir,parsed.save_dir,parsed.separator_char)
