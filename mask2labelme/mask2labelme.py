@@ -142,7 +142,7 @@ if __name__ == '__main__':
     args.add_argument('-l','--label_name',default='auto_generation',type=str,help='mask label name')
     # 生成json的mask边的密集程度
     args.add_argument('-p','--point_precision',default=0.0001,type=float,help='ploy point precision')
-    # 对原始json的措施：更新VS替换
+    # 对原始json的措施：更新VS替换，怕不同类别被覆盖
     args.add_argument('-r','--replace_mask',default=False,type=bool,help='replece or update for old json')
     # 多线程数量
     args.add_argument('-t','--thread_num',default=1,type=int,help='number of thread')
