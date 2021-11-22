@@ -109,6 +109,8 @@ class Mask2Labelme(object):
 
         # 读取json的初始模板
         labelme_template = json.load(open(self.template_json_path, 'r', encoding='utf-8'))
+        labelme_template['shapes']=[]
+        # 使用已有json文件作为初始json状态
         if osp.exists(save_json_path) and self.replace_mask:
             labelme_template = json.load(open(save_json_path, 'r', encoding='utf-8'))
             
@@ -149,11 +151,11 @@ if __name__ == '__main__':
     parsed=args.parse_args()
 
     # 自定义参数
-    parsed.image_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/'
-    parsed.mask_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/masks/1/'
-    parsed.json_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/convert_json'
+    parsed.image_dir='/mnt/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点'
+    parsed.mask_dir='/mnt/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/masks/1/'
+    parsed.json_dir='/mnt/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/convert_json'
     # parsed.label_name='cat'
-    # parsed.point_precision=0.0001
+    parsed.point_precision=0
     # parsed.replace_mask=True
     # parsed.thread_num=2
 
