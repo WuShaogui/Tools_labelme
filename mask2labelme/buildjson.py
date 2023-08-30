@@ -177,8 +177,8 @@ class BuildJson(object):
 
         rel_image_path = osp.join(osp.relpath(osp.dirname(image_path),osp.dirname(save_json_path)),osp.basename(image_path))
         self.labelme_template['imagePath'] = rel_image_path
-        self.labelme_template['imageData'] = b64encode(open(image_path, "rb").read()).decode('utf-8')
-
+        # self.labelme_template['imageData'] = b64encode(open(image_path, "rb").read()).decode('utf-8')
+        
         # 保存json信息
         json_content = json.dumps(self.labelme_template,cls=JsonEncoder, ensure_ascii=False, indent=2, separators=(',', ': '))
         with open(save_json_path, 'w+', encoding='utf-8') as fw:

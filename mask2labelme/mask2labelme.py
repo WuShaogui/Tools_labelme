@@ -139,7 +139,7 @@ if __name__ == '__main__':
     args.add_argument('-s','--json_dir',default='convert_masks',type=str,help='save mask directory')
     
     # json的初始模板
-    args.add_argument('-j','--template_json_path',default='mask2labelme/labelme4.5.7_template.json',type=str,help='template json path')
+    args.add_argument('-j','--template_json_path',default='labelme4.5.7_template.json',type=str,help='template json path')
     # 生成json的mask标签名
     args.add_argument('-l','--label_name',default='auto_generation',type=str,help='mask label name')
     # 生成json的mask边的密集程度
@@ -151,11 +151,11 @@ if __name__ == '__main__':
     parsed=args.parse_args()
 
     # 自定义参数
-    parsed.image_dir='/mnt/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点'
-    parsed.mask_dir='/mnt/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/masks/1/'
-    parsed.json_dir='/mnt/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/convert_json'
-    # parsed.label_name='cat'
-    parsed.point_precision=0
+    parsed.image_dir='data/images'
+    parsed.mask_dir='data/masks'
+    parsed.json_dir='data/convert_json'
+    parsed.label_name='dog'
+    parsed.point_precision=1
     # parsed.replace_mask=True
     # parsed.thread_num=2
 

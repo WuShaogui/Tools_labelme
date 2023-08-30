@@ -40,7 +40,7 @@ class Labelme2Mask(object):
             os.makedirs(mask_dir,exist_ok=True)
 
         # 获取json路径下的json文件路径
-        jsons_path=[osp.join(json_dir,json_name) for json_name in glob.glob(osp.join(json_dir,'*.json'))]
+        jsons_path=[osp.join(json_dir,os.path.basename(json_name)) for json_name in glob.glob(osp.join(json_dir,'*.json'))]
         LOG.info('found {} json'.format(len(jsons_path)))
         if len(jsons_path)==0:
             LOG.error('json not found in directory:{}'.format(json_dir))
@@ -139,9 +139,9 @@ class Labelme2Mask(object):
                 if label_name  in label_name_to_value:
                     if self.convert_mode==1:
                         label_mask=lbl[label_name][:image_height,:image_width]
-                        label_mask=np.where(label_mask>0,255,label_mask)
+                        label_mask=np.where(label_mask>0,1,label_mask)
                     else:
-                        label_mask=np.where(lbl[:image_height,:image_width]==label_name_to_value[label_name],255,label_mask)
+                        label_mask=np.where(lbl[:image_height,:image_width]==label_name_to_value[label_name],1,label_mask)
                 else:
                     LOG.warning('labels:{} not exist'.format(label_name))
 
@@ -167,27 +167,25 @@ class Labelme2Mask(object):
 if __name__ == '__main__':
     # 初始化参数
     args=argparse.ArgumentParser("convert json to mask")
-    # args.add_argument('-d','--data_dir',default='',type=str,help='数据路径')
-    args.add_argument('-j','--json_dir',default='',type=str,help='json路径')
-    args.add_argument('-m','--mask_dir',default='',type=str,help='mask保存路径')
-    args.add_argument('-l','--labels_name',default=['1'],type=list,help='待解析的标签')
+    args.add_argument('-j','--json_dir',default='',type=str,help='json directory')
+    args.add_argument('-m','--mask_dir',default='',type=str,help='save mask directory')
+    args.add_argument('-l','--labels_name',default=['dog'],type=list,help='mask label name')
 
     # 针对有重叠的目标提供2种转换模式
     # 0:重叠区域只属于一类
     # 1:重叠区域可属于多类
-    args.add_argument('-c','--convert_mode',default=0,type=int,help='转换模式，0:重叠区域只属于一类；1:重叠区域可属于多类')
-    args.add_argument('-t','--thread_num',default=1,type=int,help='多线程数量')
+    args.add_argument('-c','--convert_mode',default=0,type=int,help='convert mode')
+    args.add_argument('-t','--thread_num',default=1,type=int,help='number of thread')
     args.add_argument('-e','--issave_empty_mask',default=False,type=bool,help='is save empty mask?')
     parsed=args.parse_args()
 
     # 手动定义参数
-    # parsed.data_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/'
-    parsed.json_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/'
-    parsed.mask_dir='/home/wushaogui/DataRepo/IMAGE_SCENE_SEGMENTATION/SPA/阴极爆点/masks'
+    parsed.json_dir='data/labelme_jsons'
+    parsed.mask_dir='data/masks'
 
     # parsed.convert_mode=1
-    # parsed.thread_num=3
-    # parsed.issave_empty_mask=True
+    parsed.thread_num=3
+    parsed.issave_empty_mask=False
 
     # 初始化处理类并运行
     labelme2mask=Labelme2Mask(parsed.convert_mode,parsed.thread_num,parsed.issave_empty_mask)
