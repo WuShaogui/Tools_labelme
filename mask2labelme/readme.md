@@ -1,1 +1,0 @@
-本项目用于解析eiseg的标注结果，并生成labelme能读取的json文件
